@@ -5,7 +5,7 @@ Terraform module for a SQLServer CloudSQL Instance in GCP
 module "sqlserver_db" {
   .....
   .....
-  authorized_networks_master_instance = [
+  authorized_networks = [
     {
       display_name = "Corporate IPs"
       cidr_block   = "192.168.1.0/30"

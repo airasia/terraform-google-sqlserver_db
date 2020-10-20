@@ -3,15 +3,15 @@ terraform {
 }
 
 locals {
-  master_instance_name_suffix = format("%s-%s", var.name_master_instance, var.name_suffix)
-  master_authorized_networks = [
-    for authorized_network in var.authorized_networks_master_instance : {
+  name_suffix = format("%s-%s", var.name, var.name_suffix)
+  authorized_networks = [
+    for authorized_network in var.authorized_networks : {
       name  = authorized_network.display_name
       value = authorized_network.cidr_block
     }
   ]
-  db_flags_master_instance = [for key, val in var.db_flags_master_instance : { name = key, value = val }]
-  zone_master_instance     = "${data.google_client_config.google_client.region}-${var.zone_master_instance}"
+  db_flags = [for key, val in var.db_flags : { name = key, value = val }]
+  zone     = "${data.google_client_config.google_client.region}-${var.zone}"
 }
 
 data "google_client_config" "google_client" {}
@@ -31,27 +31,27 @@ module "google_sqlserver_db" {
   version           = "4.1.0"
   depends_on        = [google_project_service.compute_api, google_project_service.cloudsql_api]
   project_id        = data.google_client_config.google_client.project
-  name              = format("sqlserver-%s", local.master_instance_name_suffix)
+  name              = format("sqlserver-%s", local.name_suffix)
   db_name           = var.db_name
   db_collation      = var.db_collation
   db_charset        = var.db_charset
   database_version  = var.db_version
   region            = data.google_client_config.google_client.region
-  zone              = local.zone_master_instance
+  zone              = local.zone
   availability_type = var.highly_available ? "REGIONAL" : "ZONAL"
-  tier              = var.instance_size_master_instance
-  disk_size         = var.disk_size_gb_master_instance
-  disk_autoresize   = var.disk_auto_resize_master_instance
+  tier              = var.instance_size
+  disk_size         = var.disk_size_gb
+  disk_autoresize   = var.disk_auto_resize
   disk_type         = "PD_SSD"
   create_timeout    = var.db_timeout
   update_timeout    = var.db_timeout
   delete_timeout    = var.db_timeout
   user_name         = var.user_name
-  database_flags    = local.db_flags_master_instance
-  user_labels       = var.user_labels_master_instance
+  database_flags    = local.db_flags
+  user_labels       = var.user_labels
   ip_configuration = {
-    authorized_networks = local.master_authorized_networks
-    ipv4_enabled        = var.public_access_master_instance
+    authorized_networks = local.authorized_networks
+    ipv4_enabled        = var.public_access
     private_network     = var.private_network
     require_ssl         = null
   }

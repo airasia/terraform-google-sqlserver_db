@@ -26,8 +26,8 @@ variable "user_name" {
   default     = "default"
 }
 
-variable "name_master_instance" {
-  description = "Portion of name to be generated for the \"Master\" instance. The same name of a deleted master instance cannot be reused for up to 7 days. See https://cloud.google.com/sql/docs/sqlserver/delete-instance > notes."
+variable "name" {
+  description = "Portion of name to be generated for the instance. The same name of a deleted instance cannot be reused for up to 7 days. See https://cloud.google.com/sql/docs/sqlserver/delete-instance > notes."
   type        = string
   default     = "v1"
 }
@@ -50,20 +50,20 @@ variable "db_collation" {
   default     = "SQL_Latin1_General_CP1_CI_AS"
 }
 
-variable "instance_size_master_instance" {
-  description = "The machine type/size of \"Master\" instance. See https://cloud.google.com/sql/docs/sqlserver/create-instance#machine-types for accepted SQLServer instance types. Choose a corresponding value from the 'API tier string' column."
+variable "instance_size" {
+  description = "The machine type/size of instance. See https://cloud.google.com/sql/docs/sqlserver/create-instance#machine-types for accepted SQLServer instance types. Choose a corresponding value from the 'API tier string' column."
   type        = string
   default     = "db-custom-1-3840"
 }
 
-variable "disk_size_gb_master_instance" {
-  description = "Disk size for the master instance in Giga Bytes."
+variable "disk_size_gb" {
+  description = "Disk size for the instance in Giga Bytes."
   type        = string
   default     = 10
 }
 
-variable "disk_auto_resize_master_instance" {
-  description = "Whether to increase disk storage size of the master instance automatically. Increased storage size is permanent. Google charges by storage size whether that storage size is utilized or not. Recommended to set to \"true\" for production workloads."
+variable "disk_auto_resize" {
+  description = "Whether to increase disk storage size of the instance automatically. Increased storage size is permanent. Google charges by storage size whether that storage size is utilized or not. Recommended to set to \"true\" for production workloads."
   type        = bool
   default     = false
 }
@@ -92,8 +92,8 @@ variable "highly_available" {
   default     = false
 }
 
-variable "authorized_networks_master_instance" {
-  description = "External networks that can access the SQLServer master instance through HTTPS."
+variable "authorized_networks" {
+  description = "External networks that can access the SQLServer instance through HTTPS."
   type = list(object({
     display_name = string
     cidr_block   = string
@@ -101,26 +101,26 @@ variable "authorized_networks_master_instance" {
   default = []
 }
 
-variable "zone_master_instance" {
-  description = "The zone-letter to launch the master instance in. Options are \"a\" or \"b\" or \"c\" or \"d\". Defaults to \"a\" zone of the Google provider's region if nothing is specified here. See https://cloud.google.com/compute/docs/regions-zones."
+variable "zone" {
+  description = "The zone-letter to launch the instance in. Options are \"a\" or \"b\" or \"c\" or \"d\". Defaults to \"a\" zone of the Google provider's region if nothing is specified here. See https://cloud.google.com/compute/docs/regions-zones."
   type        = string
   default     = "a"
 }
 
-variable "public_access_master_instance" {
-  description = "Whether public IPv4 address should be assigned to the SQLServer master instance. If set to 'false' then 'var.private_network' must be defined."
+variable "public_access" {
+  description = "Whether public IPv4 address should be assigned to the SQLServer instance. If set to 'false' then 'var.private_network' must be defined."
   type        = bool
   default     = false
 }
 
-variable "db_flags_master_instance" {
-  description = "The database flags applied to the master instance. See https://cloud.google.com/sql/docs/sqlserver/flags"
+variable "db_flags" {
+  description = "The database flags applied to the instance. See https://cloud.google.com/sql/docs/sqlserver/flags"
   type        = map(string)
   default     = {}
 }
 
-variable "user_labels_master_instance" {
-  description = "Key/value labels for the master instance."
+variable "user_labels" {
+  description = "Key/value labels for the instance."
   type        = map(string)
   default     = {}
 }
