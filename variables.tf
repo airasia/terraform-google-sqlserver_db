@@ -12,7 +12,7 @@ variable "name_suffix" {
 }
 
 variable "private_network" {
-  description = "A VPC network (self-link) that can access the SQLServer instance via private IP. Can set to \"null\" if any of \"var.public_access_*\" is set to \"true\"."
+  description = "A VPC network (self-link) that can access the SQLServer instance via private IP. Can set to \"null\" if \"var.public_access\" is set to \"true\"."
   type        = string
 }
 
@@ -138,7 +138,7 @@ variable "db_timeout" {
 }
 
 variable "sql_proxy_user_groups" {
-  description = "List of usergroup emails that maybe allowed to connect with the database using CloudSQL Proxy. Connecting via CLoudSQL proxy from remote/localhost requires \"var.public_access_*\" to be set to \"true\". See https://cloud.google.com/sql/docs/sqlserver/sql-proxy#what_the_proxy_provides"
+  description = "List of usergroup emails that maybe allowed to connect with the database using CloudSQL Proxy. Connecting via CLoudSQL proxy from remote/localhost requires \"var.public_access\" to be set to \"true\". See https://cloud.google.com/sql/docs/sqlserver/sql-proxy#what_the_proxy_provides"
   type        = list(string)
   default     = []
 }
