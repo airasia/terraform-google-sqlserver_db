@@ -58,7 +58,7 @@ variable "instance_size" {
 
 variable "disk_size_gb" {
   description = "Disk size for the instance in Giga Bytes."
-  type        = string
+  type        = number
   default     = 10
 }
 
