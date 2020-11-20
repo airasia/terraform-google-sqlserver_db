@@ -28,7 +28,7 @@ resource "google_project_service" "cloudsql_api" {
 
 module "google_sqlserver_db" {
   source            = "GoogleCloudPlatform/sql-db/google//modules/mssql"
-  version           = "4.1.0"
+  version           = "4.3.0"
   depends_on        = [google_project_service.compute_api, google_project_service.cloudsql_api]
   project_id        = data.google_client_config.google_client.project
   name              = format("sqlserver-%s", local.name_suffix)
