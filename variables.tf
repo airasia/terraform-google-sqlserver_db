@@ -142,3 +142,9 @@ variable "sql_proxy_user_groups" {
   type        = list(string)
   default     = []
 }
+
+variable "deletion_protection" {
+  description = "Used to prevent Terraform from deleting the SQLServer instance. Must apply with \"false\" first before attempting to delete in the next plan-apply."
+  type        = bool
+  default     = true
+}
