@@ -27,29 +27,29 @@ resource "google_project_service" "cloudsql_api" {
 }
 
 module "google_sqlserver_db" {
-  source              = "GoogleCloudPlatform/sql-db/google//modules/mssql"
-  version             = "4.3.0"
-  depends_on          = [google_project_service.compute_api, google_project_service.cloudsql_api]
-  deletion_protection = var.deletion_protection
-  project_id          = data.google_client_config.google_client.project
-  name                = format("sqlserver-%s", local.name_suffix)
+  source               = "GoogleCloudPlatform/sql-db/google//modules/mssql"
+  version              = "4.3.0"
+  depends_on           = [google_project_service.compute_api, google_project_service.cloudsql_api]
+  deletion_protection  = var.deletion_protection
+  project_id           = data.google_client_config.google_client.project
+  name                 = format("sqlserver-%s", local.name_suffix)
   db_name              = var.default_db_name
   db_collation         = var.default_db_collation
   db_charset           = var.default_db_charset
-  database_version    = var.db_version
-  region              = data.google_client_config.google_client.region
-  zone                = local.zone
-  availability_type   = var.highly_available ? "REGIONAL" : "ZONAL"
-  tier                = var.instance_size
-  disk_size           = var.disk_size_gb
-  disk_autoresize     = var.disk_auto_resize
-  disk_type           = "PD_SSD"
-  create_timeout      = var.db_timeout
-  update_timeout      = var.db_timeout
-  delete_timeout      = var.db_timeout
+  database_version     = var.db_version
+  region               = data.google_client_config.google_client.region
+  zone                 = local.zone
+  availability_type    = var.highly_available ? "REGIONAL" : "ZONAL"
+  tier                 = var.instance_size
+  disk_size            = var.disk_size_gb
+  disk_autoresize      = var.disk_auto_resize
+  disk_type            = "PD_SSD"
+  create_timeout       = var.db_timeout
+  update_timeout       = var.db_timeout
+  delete_timeout       = var.db_timeout
   user_name            = var.root_user_name
   user_password        = var.root_user_password
-  database_flags      = local.db_flags
+  database_flags       = local.db_flags
   user_labels          = var.labels
   additional_users     = var.additional_users
   additional_databases = var.additional_databases
