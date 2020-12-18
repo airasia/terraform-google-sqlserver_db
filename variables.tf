@@ -20,10 +20,16 @@ variable "private_network" {
 # OPTIONAL PARAMETERS
 # ----------------------------------------------------------------------------------------------------------------------
 
-variable "user_name" {
-  description = "The name of the default database user."
+variable "root_user_name" {
+  description = "The name of the root user."
   type        = string
-  default     = "default"
+  default     = "root"
+}
+
+variable "root_user_password" {
+  description = "The password of the root user. If not set (recommended to keep unset), a random password will be generated and will be available in the root_user_password output attribute."
+  type        = string
+  default     = ""
 }
 
 variable "name" {
@@ -38,14 +44,20 @@ variable "db_version" {
   default     = "SQLSERVER_2017_STANDARD"
 }
 
-variable "db_charset" {
-  description = "The charset for the SQLServer database."
+variable "default_db_name" {
+  description = "Name of the default database to be created."
+  type        = string
+  default     = "default"
+}
+
+variable "default_db_charset" {
+  description = "The charset for the default database."
   type        = string
   default     = ""
 }
 
-variable "db_collation" {
-  description = "The collation for the SQLServer database. See https://docs.microsoft.com/en-us/sql/relational-databases/collations/collation-and-unicode-support?view=sql-server-ver15#Server-level-collations"
+variable "default_db_collation" {
+  description = "The collation for the default database. See https://docs.microsoft.com/en-us/sql/relational-databases/collations/collation-and-unicode-support?view=sql-server-ver15#Server-level-collations"
   type        = string
   default     = "SQL_Latin1_General_CP1_CI_AS"
 }
@@ -119,16 +131,10 @@ variable "db_flags" {
   default     = {}
 }
 
-variable "user_labels" {
+variable "labels" {
   description = "Key/value labels for the instance."
   type        = map(string)
   default     = {}
-}
-
-variable "db_name" {
-  description = "Name of the default database to be created."
-  type        = string
-  default     = "default"
 }
 
 variable "db_timeout" {
@@ -147,4 +153,24 @@ variable "deletion_protection" {
   description = "Used to prevent Terraform from deleting the SQLServer instance. Must apply with \"false\" first before attempting to delete in the next plan-apply."
   type        = bool
   default     = true
+}
+
+variable "additional_users" {
+  description = "A list of additional users to be created in the CloudSQL instance"
+  type = list(object({
+    name     = string
+    password = string
+    host     = string
+  }))
+  default = []
+}
+
+variable "additional_databases" {
+  description = "A list of additional databases to be created in the CloudSQL instance"
+  type = list(object({
+    name      = string
+    charset   = string
+    collation = string
+  }))
+  default = []
 }

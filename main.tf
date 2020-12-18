@@ -33,9 +33,9 @@ module "google_sqlserver_db" {
   deletion_protection = var.deletion_protection
   project_id          = data.google_client_config.google_client.project
   name                = format("sqlserver-%s", local.name_suffix)
-  db_name             = var.db_name
-  db_collation        = var.db_collation
-  db_charset          = var.db_charset
+  db_name              = var.default_db_name
+  db_collation         = var.default_db_collation
+  db_charset           = var.default_db_charset
   database_version    = var.db_version
   region              = data.google_client_config.google_client.region
   zone                = local.zone
@@ -47,9 +47,12 @@ module "google_sqlserver_db" {
   create_timeout      = var.db_timeout
   update_timeout      = var.db_timeout
   delete_timeout      = var.db_timeout
-  user_name           = var.user_name
+  user_name            = var.root_user_name
+  user_password        = var.root_user_password
   database_flags      = local.db_flags
-  user_labels         = var.user_labels
+  user_labels          = var.labels
+  additional_users     = var.additional_users
+  additional_databases = var.additional_databases
   ip_configuration = {
     authorized_networks = local.authorized_networks
     ipv4_enabled        = var.public_access

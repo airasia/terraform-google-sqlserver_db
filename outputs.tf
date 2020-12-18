@@ -45,13 +45,18 @@ output "instance_service_account_email_address" {
   description = "The service account email address assigned to the master instance"
 }
 
-output "user_name" {
-  description = "The name of the database user"
-  value       = var.user_name
+output "root_user_name" {
+  description = "The name of the root user"
+  value       = var.root_user_name
 }
 
-output "generated_user_password" {
-  description = "The auto generated default user password if not input password was provided"
-  value       = module.google_sqlserver_db.generated_user_password
+output "root_user_password" {
+  description = "The password of the root user (auto-generated if var.root_user_password was not provided)"
+  value       = var.root_user_password != "" ? var.root_user_password : module.google_sqlserver_db.generated_user_password
   sensitive   = true
+}
+
+output "additional_users" {
+  description = "The additional_users that were passed into this module."
+  value       = var.additional_users
 }
