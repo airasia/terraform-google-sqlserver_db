@@ -10,7 +10,7 @@ locals {
       value = authorized_network.cidr_block
     }
   ]
-  db_flags = [for key, val in var.db_flags : { name = key, value = val }]
+  db_flags       = [for key, val in var.db_flags : { name = key, value = val }]
   default_region = data.google_client_config.google_client.region
   region         = coalesce(var.region, local.default_region)
   zone           = format("%s-%s", local.region, var.zone)
