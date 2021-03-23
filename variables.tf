@@ -113,6 +113,12 @@ variable "authorized_networks" {
   default = []
 }
 
+variable "region" {
+  description = "The region to launch the instance in. Defaults to the Google provider's region if nothing is specified here. See https://cloud.google.com/compute/docs/regions-zones"
+  type        = string
+  default     = ""
+}
+
 variable "zone" {
   description = "The zone-letter to launch the instance in. Options are \"a\" or \"b\" or \"c\" or \"d\". Defaults to \"a\" zone of the Google provider's region if nothing is specified here. See https://cloud.google.com/compute/docs/regions-zones."
   type        = string

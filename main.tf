@@ -11,7 +11,9 @@ locals {
     }
   ]
   db_flags = [for key, val in var.db_flags : { name = key, value = val }]
-  zone     = "${data.google_client_config.google_client.region}-${var.zone}"
+  default_region = data.google_client_config.google_client.region
+  region         = coalesce(var.region, local.default_region)
+  zone           = format("%s-%s", local.region, var.zone)
 }
 
 data "google_client_config" "google_client" {}
@@ -37,7 +39,7 @@ module "google_sqlserver_db" {
   db_collation         = var.default_db_collation
   db_charset           = var.default_db_charset
   database_version     = var.db_version
-  region               = data.google_client_config.google_client.region
+  region               = local.region
   zone                 = local.zone
   availability_type    = var.highly_available ? "REGIONAL" : "ZONAL"
   tier                 = var.instance_size
