@@ -146,7 +146,7 @@ variable "labels" {
 variable "db_timeout" {
   description = "How long a database operation is allowed to take before being considered a failure."
   type        = string
-  default     = "15m"
+  default     = "30m"
 }
 
 variable "sql_proxy_user_groups" {
