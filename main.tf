@@ -30,7 +30,7 @@ resource "google_project_service" "cloudsql_api" {
 
 module "google_sqlserver_db" {
   source                          = "GoogleCloudPlatform/sql-db/google//modules/mssql"
-  version                         = "4.5.0"
+  version                         = "9.0.0"
   depends_on                      = [google_project_service.compute_api, google_project_service.cloudsql_api]
   deletion_protection             = var.deletion_protection
   project_id                      = data.google_client_config.google_client.project
@@ -71,11 +71,15 @@ module "google_sqlserver_db" {
     binary_log_enabled             = var.binary_log_enabled
     start_time                     = "00:05"
     point_in_time_recovery_enabled = var.pit_recovery_enabled
+    transaction_log_retention_days = null
+    retained_backups               = null
+    retention_unit                 = null
   }
 }
 
 resource "google_project_iam_member" "cloudsql_proxy_user" {
   for_each   = toset(var.sql_proxy_user_groups)
+  project    = data.google_client_config.google_client.project
   role       = "roles/cloudsql.client" # see https://cloud.google.com/sql/docs/sqlserver/quickstart-proxy-test#before-you-begin
   member     = "group:${each.value}"
   depends_on = [google_project_service.compute_api, google_project_service.cloudsql_api]
