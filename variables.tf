@@ -199,3 +199,84 @@ variable "maintenance_window" {
     update_track = "stable"
   }
 }
+
+variable "name_read_replica" {
+  description = "Portion of name to be generated for the \"ReadReplica\" instances. The same name of a deleted read-replica instance cannot be reused for up to 7 days. See https://cloud.google.com/sql/docs/postgres/delete-instance > notes."
+  type        = string
+  default     = "v1"
+}
+
+variable "instance_size_read_replica" {
+  description = "The machine type/size of \"ReadReplica\" instances. See https://cloud.google.com/sql/docs/postgres/create-instance#machine-types for accepted Postgres instance types. Choose a corresponding value from the 'API tier string' column."
+  type        = string
+  default     = "db-custom-1-3840"
+}
+
+variable "disk_size_gb_read_replica" {
+  description = "Disk size for the read replica instance(s) in Giga Bytes."
+  type        = number
+  default     = 10
+}
+
+variable "disk_auto_resize_read_replica" {
+  description = "Whether to increase disk storage size of the read replica instance(s) automatically. Increased storage size is permanent. Google charges by storage size whether that storage size is utilized or not. Recommended to set to \"true\" for production workloads."
+  type        = bool
+  default     = false
+}
+
+variable "read_replica_count" {
+  description = "Specify the number of read replicas for the Postgres instance. Value greater than 0 requires 'var.pit_recovery_enabled' to be 'true'."
+  type        = number
+  default     = 0
+}
+
+variable "authorized_networks_read_replica" {
+  description = "External networks that can access the Postgres ReadReplica instance(s) through HTTPS."
+  type = list(object({
+    display_name = string
+    cidr_block   = string
+  }))
+  default = []
+}
+
+variable "region_read_replica" {
+  description = "The region to launch the ReadReplica instance(s) in. Defaults to the master instance's region if nothing is specified here. See https://cloud.google.com/compute/docs/regions-zones."
+  type        = string
+  default     = ""
+}
+
+variable "zone_read_replica" {
+  description = "The zone-letter to launch the ReadReplica instance(s) in. Options are \"a\" or \"b\" or \"c\" or \"d\". Defaults to \"b\" zone of the Google provider's region if nothing is specified here. See https://cloud.google.com/compute/docs/regions-zones."
+  type        = string
+  default     = "b"
+}
+
+variable "public_access_read_replica" {
+  description = "Whether public IPv4 address should be assigned to the Postgres read-replica instance(s). If set to 'false' then 'var.private_network' must be defined."
+  type        = bool
+  default     = false
+}
+
+variable "db_flags_read_replica" {
+  description = "The database flags applied to the read replica instances. See https://cloud.google.com/sql/docs/postgres/flags"
+  type        = map(string)
+  default     = {}
+}
+
+variable "labels_read_replica" {
+  description = "Key/value labels for the ReadReplica instance(s)."
+  type        = map(string)
+  default     = {}
+}
+
+variable "deletion_protection_read_replica" {
+  description = "Used to prevent Terraform from deleting the ReadReplica. Must apply with \"false\" first before attempting to delete in the next plan-apply."
+  type        = bool
+  default     = true
+}
+
+variable "encryption_key_name_read_replica" {
+  description = "Encryption key is required for replicas in different regions. For replicas in same region as master, set encryption_key_name = null"
+  type        = string
+  default     = null
+}

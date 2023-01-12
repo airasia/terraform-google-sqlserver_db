@@ -14,6 +14,19 @@ locals {
   default_region = data.google_client_config.google_client.region
   region         = coalesce(var.region, local.default_region)
   zone           = format("%s-%s", local.region, var.zone)
+
+  read_replica_name_suffix = format("-%s-", var.name_read_replica)
+  region_read_replica      = coalesce(var.region_read_replica, local.region_master_instance)
+  zone_read_replica        = format("%s-%s", local.region_read_replica, var.zone_read_replica)
+  db_flags_read_replica    = [for key, val in var.db_flags_read_replica : { name = key, value = val }]
+
+  read_replica_authorized_networks = [
+    for authorized_network in var.authorized_networks_read_replica : {
+      name  = authorized_network.display_name
+      value = authorized_network.cidr_block
+    }
+  ]
+  
 }
 
 data "google_client_config" "google_client" {}
@@ -75,6 +88,29 @@ module "google_sqlserver_db" {
     retained_backups               = null
     retention_unit                 = null
   }
+
+  # read replica settings
+  read_replica_deletion_protection = var.deletion_protection_read_replica
+  read_replica_name_suffix         = local.read_replica_name_suffix
+  read_replicas = [
+    for array_index in range(var.read_replica_count) : {
+      name                = array_index
+      tier                = var.instance_size_read_replica
+      zone                = local.zone_read_replica
+      encryption_key_name = var.encryption_key_name_read_replica
+      ip_configuration = {
+        authorized_networks = local.read_replica_authorized_networks
+        ipv4_enabled        = var.public_access_read_replica
+        private_network     = var.private_network
+        require_ssl         = null
+      }
+      database_flags  = local.db_flags_read_replica
+      disk_autoresize = var.disk_auto_resize_read_replica
+      disk_size       = var.disk_size_gb_read_replica
+      disk_type       = "PD_SSD"
+      user_labels     = var.labels_read_replica
+    }
+  ]
 }
 
 resource "google_project_iam_member" "cloudsql_proxy_user" {
